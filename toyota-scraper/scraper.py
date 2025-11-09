@@ -6,51 +6,60 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import csv
 import time
-from urllib.parse import urljoin
 
-print("test")
-
-URL = "https://www.toyota.com/search-inventory/"
+print('Running...')
+URL = "https://www.toyota.com/all-vehicles/" # website url that we are scraping
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 driver.get(URL)
 
-time.sleep(5) # give time for JS to load cards
+time.sleep(5) # give time for JavaScript to load cards
 
-#models = driver.find_elements(By.CSS_SELECTOR, "div[data-testid='model-tile-name']")
-# listings
-listings = driver.find_elements(By.CSS_SELECTOR, "a[data-testid='Link'][aria-label^='Select Model']")
+# find elements(data) as lists by using a CSS selector
+years = driver.find_elements(By.CSS_SELECTOR, "div.model-year.label-01")
+models = driver.find_elements(By.CSS_SELECTOR, "div.title.heading-04")
+msrps_or_mpgs = driver.find_elements(By.CSS_SELECTOR, "div.header.body-01")
+images = driver.find_elements(By.CSS_SELECTOR, "img[alt='Model image']")
 
-listings_urls = [] # all listing urls to scrape data from 
-for listing in listings: # loop through each listing to get the listing url
-    #print(listing)
-    href = listing.get_attribute('href') # listing url
-    if not href:
-        continue
-    full_url = urljoin(URL, href)
-    listings_urls.append(full_url)
-    #print(href + '\n')
+msrps = []
+mpgs = []
 
-for listing_url in listings_urls: 
-    time.sleep(3)
-    driver.get(listing_url)
-    '''
-    models = driver.find_elements(By.CSS_SELECTOR, "div.sc-dRpcpH.bldtFi")
-    for model in models:
-        print(model.text)
-    '''
-    prices = driver.find_elements(By.CSS_SELECTOR, "span[data-testid='Typography']")
-    for price in prices:
-        print(prices + '\n')
+# since msrps and mpgs share the same class we have to parse them
+for element in msrps_or_mpgs:
+    text = element.text.strip()
+    if "$" in text:
+        msrps.append(text)
+    elif "/" in text:
+        mpgs.append(text)
 
-        
+car_data = [] # list for car data
 
-# print models
-'''
-for model in models:
-    print(model.text)
+# keywords to determine style
+suv_keywords = ('4Runner', 'bZ', 'Land', 'Sequoia')
+car_keywords = ('Camry', 'Corolla', 'Supra', 'GR86', 'Mirai', 'Prius', 'Crown')
+crossover_keywords = ('')
 
-file = open("scraped_cars.csv", "w") # create csv
-writer = csv.writer(file) # writes to csv
-'''
+# get each element in the lists
+for year, model, msrp, mpg in zip(years, models, msrps, mpgs):
+    # check styles
+    if 'Corolla Cross' in model.text or 'Highlander' in model.text:
+        style = 'Hybrid'
+    elif any(keyword in model.text for keyword in suv_keywords):
+        style = 'SUV'
+    elif any(keyword in model.text for keyword in car_keywords):
+        style = 'Car'
+    elif model.text == 'Sienna':
+        style = 'Minivan'
+    elif 'Tacoma' in model.text or 'Tundra' in model.text:
+        style = 'Truck'
 
-# driver.quit()
+    # print and append to car data list
+    print(year.text + '\t' + model.text + '\t' + msrp + '\t' + mpg + '\t' + style)
+    car_data.append([year.text, model.text, msrp, mpg, style])
+
+# write to csv file
+with open("car_database.csv", "w", newline='', encoding='utf-8') as file:
+    writer = csv.writer(file)
+    writer.writerow(['Year', 'Model', 'MSRP', 'MPG', 'Style'])
+    writer.writerows(car_data)
+
+driver.quit()
