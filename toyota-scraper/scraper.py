@@ -7,6 +7,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 import csv
 import time
 import os
+from urllib.parse import urljoin
 
 print('Running...')
 URL = "https://www.toyota.com/all-vehicles/" # website url that we are scraping
@@ -46,7 +47,7 @@ for year, model, msrp, mpg, image in zip(years, models, msrps, mpgs, images):
     time.sleep(0.5)
     # check styles
     if 'Corolla Cross' in model.text or 'Highlander' in model.text:
-        style = 'Hybrid'
+        style = 'Crossover'
     elif any(keyword in model.text for keyword in suv_keywords):
         style = 'SUV'
     elif any(keyword in model.text for keyword in car_keywords):
@@ -54,7 +55,7 @@ for year, model, msrp, mpg, image in zip(years, models, msrps, mpgs, images):
     elif model.text == 'Sienna':
         style = 'Minivan'
     elif 'Tacoma' in model.text or 'Tundra' in model.text:
-        style = 'Truck'
+        style = 'Truck' 
 
     driver.execute_script("arguments[0].scrollIntoView();", image) # scroll to image to lazy load
 
