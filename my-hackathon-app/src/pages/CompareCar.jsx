@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import Navbar from "../components/NavBar";
+import Footer from "../components/Footer";
 
 const VEHICLES = [
   {
@@ -75,57 +77,65 @@ function CompareCar() {
   };
 
   return (
-    <main className="page-main">
-      <h1 className="page-heading">Compare Two Toyota Vehicles</h1>
-      <p className="page-subtitle">
-        Search for two models and see them side-by-side on price, size, fuel
-        economy, and key specs.
-      </p>
+    <div className="app-container">
+      <Navbar />
 
-      <section className="page-card">
-        <h2 className="page-section-title">Choose vehicles to compare</h2>
-        <div className="split-grid">
-          <div>
-            <label className="field-label">Left car (Car A)</label>
-            <input
-              list="vehicleNamesCompare"
-              className="input-pill"
-              value={leftInput}
-              onChange={(e) => setLeftInput(e.target.value)}
-              placeholder="e.g. Camry SE"
-            />
-            <button className="page-button" onClick={handleLoadLeft}>
-              Load left car
-            </button>
-          </div>
+      <main className="home-main">
+        <div className="page-main">
+          <h1 className="page-heading">Compare Two Toyota Vehicles</h1>
+          <p className="page-subtitle">
+            Search for two models and see them side-by-side on price, size, fuel
+            economy, and key specs.
+          </p>
 
-          <div>
-            <label className="field-label">Right car (Car B)</label>
-            <input
-              list="vehicleNamesCompare"
-              className="input-pill"
-              value={rightInput}
-              onChange={(e) => setRightInput(e.target.value)}
-              placeholder="e.g. RAV4 XLE"
-            />
-            <button className="page-button" onClick={handleLoadRight}>
-              Load right car
-            </button>
-          </div>
+          <section className="page-card">
+            <h2 className="page-section-title">Choose vehicles to compare</h2>
+            <div className="split-grid">
+              <div>
+                <label className="field-label">Left car (Car A)</label>
+                <input
+                  list="vehicleNamesCompare"
+                  className="input-pill"
+                  value={leftInput}
+                  onChange={(e) => setLeftInput(e.target.value)}
+                  placeholder="e.g. Camry SE"
+                />
+                <button className="page-button" onClick={handleLoadLeft}>
+                  Load left car
+                </button>
+              </div>
+
+              <div>
+                <label className="field-label">Right car (Car B)</label>
+                <input
+                  list="vehicleNamesCompare"
+                  className="input-pill"
+                  value={rightInput}
+                  onChange={(e) => setRightInput(e.target.value)}
+                  placeholder="e.g. RAV4 XLE"
+                />
+                <button className="page-button" onClick={handleLoadRight}>
+                  Load right car
+                </button>
+              </div>
+            </div>
+
+            <datalist id="vehicleNamesCompare">
+              {VEHICLES.map((v) => (
+                <option key={v.id} value={v.name} />
+              ))}
+            </datalist>
+          </section>
+
+          <section className="split-grid">
+            <CompareCard title="Car A" car={leftCar} />
+            <CompareCard title="Car B" car={rightCar} />
+          </section>
+
+          <Footer />
         </div>
-
-        <datalist id="vehicleNamesCompare">
-          {VEHICLES.map((v) => (
-            <option key={v.id} value={v.name} />
-          ))}
-        </datalist>
-      </section>
-
-      <section className="split-grid">
-        <CompareCard title="Car A" car={leftCar} />
-        <CompareCard title="Car B" car={rightCar} />
-      </section>
-    </main>
+      </main>
+    </div>
   );
 }
 

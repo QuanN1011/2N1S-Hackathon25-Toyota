@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/NavBar";
 import Footer from "../components/Footer";
 
@@ -60,6 +61,9 @@ function AllVehicles() {
   const [type, setType] = useState("All");
   const [maxPrice, setMaxPrice] = useState("");
   const [minSeats, setMinSeats] = useState("");
+  const [selectedVehicleId, setSelectedVehicleId] = useState(null);
+
+  const navigate = useNavigate();
 
   const filtered = VEHICLES.filter((v) => {
     const matchesSearch = v.name.toLowerCase().includes(search.toLowerCase());
@@ -68,6 +72,22 @@ function AllVehicles() {
     const matchesSeats = minSeats === "" || v.seats >= Number(minSeats || 0);
     return matchesSearch && matchesType && matchesPrice && matchesSeats;
   });
+
+  const handleSelectVehicle = (id) => {
+    // click again to unselect
+    setSelectedVehicleId((prev) => (prev === id ? null : id));
+  };
+
+  const selectedVehicle =
+    filtered.find((v) => v.id === selectedVehicleId) ||
+    VEHICLES.find((v) => v.id === selectedVehicleId) ||
+    null;
+
+  const handleCompareClick = () => {
+    if (!selectedVehicle) return;
+    // You can pass state to CompareCar if you want to use it there
+    navigate("/comparecar", { state: { vehicleId: selectedVehicle.id } });
+  };
 
   return (
     <div className="app-container">
@@ -137,20 +157,30 @@ function AllVehicles() {
 
           <section>
             <div className="vehicles-grid">
-              {filtered.map((v) => (
-                <article key={v.id} className="vehicle-card">
-                  <h2 className="vehicle-name">{v.name}</h2>
-                  <p className="vehicle-meta">
-                    {v.type} • {v.seats} seats • {v.drivetrain}
-                  </p>
-                  <p className="vehicle-text">
-                    <strong>${v.price.toLocaleString()}</strong> (MSRP estimate)
-                  </p>
-                  <p className="vehicle-text">
-                    {v.mpgCity} / {v.mpgHwy} mpg (city / highway)
-                  </p>
-                </article>
-              ))}
+              {filtered.map((v) => {
+                const isSelected = v.id === selectedVehicleId;
+                return (
+                  <article
+                    key={v.id}
+                    className={`vehicle-card vehicle-card-clickable ${
+                      isSelected ? "vehicle-card-selected" : ""
+                    }`}
+                    onClick={() => handleSelectVehicle(v.id)}
+                  >
+                    <h2 className="vehicle-name">{v.name}</h2>
+                    <p className="vehicle-meta">
+                      {v.type} • {v.seats} seats • {v.drivetrain}
+                    </p>
+                    <p className="vehicle-text">
+                      <strong>${v.price.toLocaleString()}</strong> (MSRP
+                      estimate)
+                    </p>
+                    <p className="vehicle-text">
+                      {v.mpgCity} / {v.mpgHwy} mpg (city / highway)
+                    </p>
+                  </article>
+                );
+              })}
 
               {filtered.length === 0 && (
                 <p className="page-text">
@@ -160,6 +190,18 @@ function AllVehicles() {
               )}
             </div>
           </section>
+
+          {/* Compare prompt when a car is selected */}
+          {selectedVehicle && (
+            <section className="page-card" style={{ marginTop: "20px" }}>
+              <p className="page-text">
+                Do you want to compare <strong>{selectedVehicle.name}</strong>?
+              </p>
+              <button className="page-button" onClick={handleCompareClick}>
+                Compare this car
+              </button>
+            </section>
+          )}
 
           <Footer />
         </div>
