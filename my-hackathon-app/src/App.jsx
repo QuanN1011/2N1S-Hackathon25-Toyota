@@ -1,35 +1,37 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import Navbar from './components/NavBar';
+import Footer from './components/Footer';
 import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div className = "app-container">
+        <Navbar />
+        {/* Main content area*/}
+        <main className = "home-main">
+          {/* Placeholder for main content */}
+          <section className = "content-section">
+            <h1> Find Your Perfect Toyota</h1>
+            <p>Discover and compare Toyota vehicles that fits your lifestyle</p>
+            {/* CTA Button, let users explore */}
+            <button className = "cta-button">Explore Vehicles</button>
+          </section>
+
+          {/* Info Section */}
+          <section className = "info-section">
+            <h2>How It Works</h2>
+            <ol>
+              <li> Use search bar and filters choices to narrow down your preferred vehicle</li>
+              <li>View detailed information for each Toyota model</li>
+              <li>Select cars to compare side by side</li>
+            </ol>
+          </section>
+          <Footer />
+        </main>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
   )
 }
 
-export default App
+export default App;
