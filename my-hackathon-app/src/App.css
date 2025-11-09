@@ -481,3 +481,30 @@
   min-height: 220px;
 }
 
+.logout-button {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid #facc15;
+  background: transparent;
+  color: #facc15;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.logout-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(15, 23, 42, 0.4);
+  opacity: 0.95;
+}
+
+.login-button {
+  background: transparent;
+  border-color: #facc15;
+  color: #facc15;
+}
+
+.signup-button {
+  background: linear-gradient(90deg, #facc15, #fde047);
+  color: #3b0764;
+}

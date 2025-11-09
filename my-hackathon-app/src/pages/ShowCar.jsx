@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import Navbar from "../components/NavBar";
+import Footer from "../components/Footer";
 
 const VEHICLES = [
   {
@@ -24,7 +26,7 @@ const VEHICLES = [
     mpgCity: 27,
     mpgHwy: 35,
     description:
-      "Versatile compact SUV that works for daily commuting, weekend trips, and light off-road.",
+      "Versatile compact SUV for commuting, weekend trips, and light off-road use.",
     cargo: "37.6–69.8 cu ft cargo space",
   },
   {
@@ -87,67 +89,81 @@ function ShowCar() {
   };
 
   return (
-    <main className="page-main">
-      <h1 className="page-heading">Look Up a Toyota Vehicle</h1>
-      <p className="page-subtitle">
-        Search for a specific model by name to see a quick overview of its key
-        specs, fuel economy, space, and typical pricing.
-      </p>
+    <div className="app-container">
+      <Navbar />
 
-      <section className="page-card">
-        <h2 className="page-section-title">Search by name</h2>
-        <label className="field-label">Vehicle name</label>
-        <input
-          list="vehicleNamesShow"
-          className="input-pill"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="e.g. Corolla LE Hybrid"
-        />
-        <button className="page-button" onClick={handleSearch}>
-          Show vehicle
-        </button>
+      <main className="home-main">
+        <div className="page-main">
+          <h1 className="page-heading">Look Up a Toyota Vehicle</h1>
+          <p className="page-subtitle">
+            Search for a specific model by name to see a quick overview of its
+            specs, fuel economy, space, and typical pricing.
+          </p>
 
-        <datalist id="vehicleNamesShow">
-          {VEHICLES.map((v) => (
-            <option key={v.id} value={v.name} />
-          ))}
-        </datalist>
+          {/* Search card */}
+          <section className="page-card">
+            <h2 className="page-section-title">Search by name</h2>
+            <label className="field-label">Vehicle name</label>
+            <input
+              list="vehicleNamesShow"
+              className="input-pill"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="e.g. Corolla LE Hybrid"
+            />
+            <button className="page-button" onClick={handleSearch}>
+              Show vehicle
+            </button>
 
-        {notFound && (
-          <p className="page-text" style={{ color: "#b91c1c" }}>
-            We couldn&apos;t find a vehicle with that exact name. Try selecting
-            one of the suggestions.
-          </p>
-        )}
-      </section>
+            <datalist id="vehicleNamesShow">
+              {VEHICLES.map((v) => (
+                <option key={v.id} value={v.name} />
+              ))}
+            </datalist>
 
-      {car && (
-        <article className="page-card">
-          <h2 className="page-section-title">{car.name}</h2>
-          <p className="vehicle-meta">
-            {car.type} • {car.seats} seats • {car.drivetrain}
-          </p>
-          <p className="vehicle-text">
-            <strong>${car.price.toLocaleString()}</strong> (approximate starting
-            MSRP)
-          </p>
-          <p className="vehicle-text">
-            Fuel economy: <strong>{car.mpgCity}</strong> mpg city /{" "}
-            <strong>{car.mpgHwy}</strong> mpg highway
-          </p>
-          <p className="vehicle-text">Cargo / bed space: {car.cargo}</p>
-          <p className="page-text">{car.description}</p>
-          <p
-            className="page-text"
-            style={{ fontSize: "0.9rem", color: "#6b7280" }}
-          >
-            Specs and pricing are estimates for demo purposes. For exact
-            availability and offers, please refer to an official Toyota dealer.
-          </p>
-        </article>
-      )}
-    </main>
+            {notFound && (
+              <p
+                className="page-text"
+                style={{ color: "#b91c1c", marginTop: "8px" }}
+              >
+                We couldn&apos;t find a vehicle with that exact name. Try
+                selecting one of the suggestions.
+              </p>
+            )}
+          </section>
+
+          {/* Details card */}
+          {car && (
+            <article className="page-card">
+              <h2 className="page-section-title">{car.name}</h2>
+              <p className="vehicle-meta">
+                {car.type} • {car.seats} seats • {car.drivetrain}
+              </p>
+              <p className="vehicle-text">
+                <strong>${car.price.toLocaleString()}</strong> (approximate
+                starting MSRP)
+              </p>
+              <p className="vehicle-text">
+                Fuel economy: <strong>{car.mpgCity}</strong> mpg city /{" "}
+                <strong>{car.mpgHwy}</strong> mpg highway
+              </p>
+              <p className="vehicle-text">Cargo / bed space: {car.cargo}</p>
+              <p className="page-text">{car.description}</p>
+              <p
+                className="page-text"
+                style={{ fontSize: "0.9rem", color: "#6b7280" }}
+              >
+                Specs and pricing are estimates for demo purposes. For exact
+                availability and offers, please refer to an official Toyota
+                dealer.
+              </p>
+            </article>
+          )}
+
+          <Footer />
+        </div>
+      </main>
+    </div>
   );
 }
 
