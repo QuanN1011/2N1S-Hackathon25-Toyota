@@ -1,76 +1,94 @@
-// Display navigation bar with hamburger menu, search bar, and user login
+// src/components/NavBar.jsx
 import React, { useState, useEffect } from "react";
-
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import LogoutButton from "./LogoutButton.jsx";
+import { fetchCars } from "../api/cars";
 
 export default function Navbar() {
-  //const [isMenuOpen, setIsMenuOpen] = useState(false); // never used
-  // menu closed
   const [session, setSession] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
+  // 🔹 Supabase session tracking
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-
+    supabase.auth
+      .getSession()
+      .then(({ data: { session } }) => setSession(session));
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-
+    } = supabase.auth.onAuthStateChange((_event, session) =>
+      setSession(session)
+    );
     return () => subscription.unsubscribe();
   }, []);
 
-  function handleClickLogin() {
-    navigate("/login"); // this changes to the login page
-  }
+  // 🔹 Clear suggestions on route change
+  useEffect(() => {
+    setShowSuggestions(false);
+    setSuggestions([]);
+  }, [location.pathname]);
 
-  function handleClickSignUp() {
-    navigate("/signup"); // this changes to the login page
-  }
+  // 🔹 Live search suggestions
+  useEffect(() => {
+    const trimmed = query.trim();
+    if (!trimmed) {
+      setSuggestions([]);
+      return;
+    }
 
-  function handleClickHome() {
-    navigate("/"); // this changes to the login page
-  }
+    const delay = setTimeout(async () => {
+      try {
+        const results = await fetchCars({ search: trimmed });
+        setSuggestions(results.slice(0, 5)); // top 5 results
+      } catch (err) {
+        console.error("Failed to fetch car suggestions", err);
+        setSuggestions([]);
+      }
+    }, 250);
 
-  function handleClickHelp() {
-    navigate("/help"); // this changes to the login page
-  }
+    return () => clearTimeout(delay);
+  }, [query]);
 
-  /*function handleClickShowCar() {
-    navigate("/showcar"); // this changes to the login page
-  } */ // not used
+  // 🔹 Navigation handlers
+  const handleClickLogin = () => navigate("/login");
+  const handleClickSignUp = () => navigate("/signup");
+  const handleClickHome = () => navigate("/");
+  const handleClickHelp = () => navigate("/help");
+  const handleClickAllVehicles = () => navigate("/allvehicles");
+  const toggleMenu = () => setMenuOpen((prev) => !prev);
 
-  function handleClickAllVehicles() {
-    navigate("/allvehicles"); // this changes to the login page
-  }
+  // 🔹 Handle search submit or suggestion click
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    const trimmed = query.trim();
+    if (!trimmed) return;
+    navigate(`/showcar?q=${encodeURIComponent(trimmed)}`);
+    setShowSuggestions(false);
+  };
 
-  // to toggle menu
-  const toggleMenu = () => {
-    setMenuOpen((prev) => !prev);
+  const handleSuggestionClick = (modelName) => {
+    setQuery(modelName);
+    navigate(`/showcar?q=${encodeURIComponent(modelName)}`);
+    setShowSuggestions(false);
   };
 
   return (
     <nav className="navbar">
       {/* Hamburger Menu */}
       <div className="navbar-hamburger">
-        {/* hamburger icon */}
         <button className="menu-button" onClick={toggleMenu}>
           <span className="menu-line" />
           <span className="menu-line" />
           <span className="menu-line" />
         </button>
 
-        {/* menu items */}
         {menuOpen && (
           <div className="menu-dropdown">
-            {/* temporary menu items */}
-            {/*<a href="#">Home</a>*/}
             <button onClick={handleClickHome}>Home</button>
             <button onClick={handleClickAllVehicles}>All Vehicles</button>
             <button onClick={handleClickHelp}>Help</button>
@@ -78,24 +96,79 @@ export default function Navbar() {
         )}
       </div>
 
-      {/* Search Bar */}
-      <div className="navbar-search">
-        {/* search input */}
-        <input type="text" className="search-input" placeholder="Search..." />
-        <button className="search-button">Search</button>
+      {/* 🔍 Search Bar */}
+      <div className="navbar-search" style={{ position: "relative" }}>
+        <form onSubmit={handleSearchSubmit}>
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Search models (e.g. Camry)"
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setShowSuggestions(true);
+            }}
+            onFocus={() => setShowSuggestions(true)}
+            onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+            autoComplete="off"
+          />
+          <button type="submit" className="search-button">
+            Search
+          </button>
+        </form>
+
+        {/* Suggestion Dropdown */}
+        {showSuggestions && suggestions.length > 0 && (
+          <ul
+            style={{
+              position: "absolute",
+              top: "100%",
+              left: 0,
+              width: "100%",
+              background: "white",
+              border: "1px solid #ccc",
+              borderRadius: "0.5rem",
+              zIndex: 20,
+              listStyle: "none",
+              padding: "0.25rem 0",
+              marginTop: "0.25rem",
+              boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+            }}
+          >
+            {suggestions.map((s) => (
+              <li
+                key={s.id}
+                onClick={() => handleSuggestionClick(s.model)}
+                style={{
+                  padding: "0.5rem 1rem",
+                  cursor: "pointer",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.background = "#f0f0f0")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.background = "white")
+                }
+              >
+                {s.year} {s.model}{" "}
+                <span style={{ color: "#666" }}>({s.style})</span>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       {/* User Login */}
       <div className="navbar-login">
         {!session && (
-          <button className="login-button" onClick={handleClickLogin}>
-            Log In
-          </button>
-        )}
-        {!session && (
-          <button className="signup-button" onClick={handleClickSignUp}>
-            Sign Up
-          </button>
+          <>
+            <button className="login-button" onClick={handleClickLogin}>
+              Log In
+            </button>
+            <button className="signup-button" onClick={handleClickSignUp}>
+              Sign Up
+            </button>
+          </>
         )}
         {session && (
           <button className="logout-button">
@@ -105,12 +178,4 @@ export default function Navbar() {
       </div>
     </nav>
   );
-} /*}
-
-/*
-{/* User Login }
-<div className="navbar-login">
-<button className="login-button">Login</button>
-<button className="signup-button">Sign Up</button>
-</div>
-*/
+}

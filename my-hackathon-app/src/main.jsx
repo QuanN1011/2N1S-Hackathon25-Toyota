@@ -1,3 +1,4 @@
+// main.jsx
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -20,9 +21,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/allvehicles" element={<AllVehicles />} />
         <Route path="/comparecar" element={<CompareCar />} />
         <Route path="/help" element={<Help />} />
+        {/* 👇 NO :id here anymore */}
         <Route path="/showcar" element={<ShowCar />} />
-        {/* optional catch-all route */}
-        {/* <Route path="*" element={<div>Page not found</div>} /> */}
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

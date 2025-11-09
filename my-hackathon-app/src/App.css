@@ -418,11 +418,11 @@
 }
 
 .vehicle-card {
-  background-color: #ffffff;
+  padding: 12px;
   border-radius: 16px;
-  padding: 16px 18px;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
-  border-top: 3px solid #350929;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  background: white;
+  text-align: center;
 }
 
 .vehicle-name {
@@ -443,6 +443,17 @@
   font-size: 0.9rem;
   margin-bottom: 4px;
 }
+
+.vehicle-image {
+  width: 100%;
+  height: auto;                /* keeps full image proportions */
+  max-height: 180px;           /* limits the image height */
+  object-fit: contain;         /* scales down instead of cropping */
+  display: block;
+  margin: 0 auto;              /* centers the image */
+  padding-top: 8px;            /* small spacing from top */
+}
+
 
 /* Buttons matching your CTA style but smaller */
 .page-button {

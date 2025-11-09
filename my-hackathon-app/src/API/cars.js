@@ -1,6 +1,8 @@
-const API_URL = import.meta.env.VITE_API_URL;
+// src/api/cars.js
 
-// get /api/cars with filters (search, style, msrp, ...)
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
+// GET /api/cars with optional filters
 export async function fetchCars(filters = {}) {
   const params = new URLSearchParams();
 
@@ -10,14 +12,17 @@ export async function fetchCars(filters = {}) {
     }
   });
 
-  const res = await fetch(`${API_URL}/api/cars?${params.toString()}`);
+  const query = params.toString();
+  const url = `${API_URL}/api/cars${query ? `?${query}` : ""}`;
+
+  const res = await fetch(url);
   if (!res.ok) {
     throw new Error("Failed to get cars");
   }
   return res.json();
 }
 
-// get /api/cars/:id
+// GET /api/cars/:id
 export async function fetchCarById(id) {
   const res = await fetch(`${API_URL}/api/cars/${id}`);
   if (!res.ok) {
@@ -26,7 +31,7 @@ export async function fetchCarById(id) {
   return res.json();
 }
 
-// /api/compare
+// POST /api/compare
 export async function compareCars(ids) {
   const res = await fetch(`${API_URL}/api/compare`, {
     method: "POST",

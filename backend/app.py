@@ -4,7 +4,11 @@ import csv
 from pathlib import Path
 
 app = Flask(__name__)
-CORS(app) # requests from React dev server'
+
+CORS(
+    app,
+    resources={r"/api/*": {"origins": ["http://localhost:5173", "http://localhost:5174"]}},
+)
 
 BASE_DIR = Path(__file__).resolve().parent
 CSV_PATH = BASE_DIR / "car_database.csv"
@@ -65,6 +69,7 @@ def load_cars_from_csv():
                 "msrp": row.get("MSRP"),
                 "mpg": row.get("MPG"),
                 "style": row.get("Style"),
+                "image": row.get("Image") or "",
             })
     return cars
 
@@ -149,7 +154,7 @@ def filter_cars():
     return jsonify(filtered), 200
     
 
-@app.route("/api/cars/<int:car_id>", methods = ["GET"])
+@app.route("/api/cars/<car_id>", methods = ["GET"])
 def get_car(car_id):
     cars = load_cars_from_csv()
     for car in cars:
@@ -169,5 +174,5 @@ def compare_cars():
 if __name__ == "__main__":  # start dev server
     cars = load_cars_from_csv()
     print(f"Loaded {len(cars)} cars from CSV")
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=8000)
 
