@@ -65,7 +65,7 @@ for year, model, msrp, mpg, image in zip(years, models, msrps, mpgs, images):
     print(year.text + '\t' + model.text + '\t' + msrp + '\t' + mpg + '\t' + style + '\t' + image_url)
     car_data.append([year.text, model.text, msrp, mpg, style, image_url])
 
-output_folder = 'toyota-scraper'
+output_folder = 'backend'
 os.makedirs(output_folder, exist_ok=True)
 
 # write to csv file
