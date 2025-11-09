@@ -7,7 +7,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   // to toggle menu
-  const toggleMenuu = () => {
+  const toggleMenu = () => {
     setMenuOpen((prev) => !prev);
   };
 
