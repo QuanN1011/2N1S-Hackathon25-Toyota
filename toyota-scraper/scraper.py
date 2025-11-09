@@ -8,6 +8,7 @@ import csv
 import time
 import os
 from urllib.parse import urljoin
+import uuid
 
 print('Running...')
 URL = "https://www.toyota.com/all-vehicles/" # website url that we are scraping
@@ -61,10 +62,13 @@ for year, model, msrp, mpg, image in zip(years, models, msrps, mpgs, images):
 
     image_url = image.get_attribute('data-jelly')
 
-    # print and append to car data list
-    print(year.text + '\t' + model.text + '\t' + msrp + '\t' + mpg + '\t' + style + '\t' + image_url)
-    car_data.append([year.text, model.text, msrp, mpg, style, image_url])
+    random_uuid = str(uuid.uuid4())[:4] # primary keys to string only 4 chars
 
+    # print and append to car data list
+    print(random_uuid + '\t' + year.text + '\t' + model.text + '\t' + msrp + '\t' + mpg + '\t' + style + '\t' + image_url)
+    car_data.append([random_uuid, year.text, model.text, msrp, mpg, style, image_url])
+
+# csv file path
 output_folder = 'backend'
 os.makedirs(output_folder, exist_ok=True)
 
@@ -72,7 +76,7 @@ os.makedirs(output_folder, exist_ok=True)
 output_path = os.path.join(output_folder, "car_database.csv")
 with open(output_path, "w", newline='', encoding='utf-8') as file:
     writer = csv.writer(file)
-    writer.writerow(['Year', 'Model', 'MSRP', 'MPG', 'Style', 'Image'])
+    writer.writerow(['UUID', 'Year', 'Model', 'MSRP', 'MPG', 'Style', 'Image'])
     writer.writerows(car_data)
 
 driver.quit()
