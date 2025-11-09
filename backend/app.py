@@ -57,8 +57,9 @@ def load_cars_from_csv():
     with CSV_PATH.open(newline='', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for idx, row in enumerate(reader):
+            car_id = row.get("uuid") or row.get("UUID") or row.get("id") or str(idx)
             cars.append({
-                "id": idx,
+                "id": car_id,
                 "year": row.get("Year"),
                 "model": row.get("Model"),
                 "msrp": row.get("MSRP"),
@@ -136,14 +137,14 @@ def filter_cars():
         filtered = [car for car in filtered if car["style"] and style in car["style"].lower()]
     # price range
     if min_msrp is not None:
-        filtered = [car for car in filtered if car["msrp"] and float(car["msrp"]) >= float(min_msrp)]
+        filtered = [car for car in filtered if parsePrice(car["msrp"]) is not None and parsePrice(car["msrp"]) >= float(min_msrp)]
     if max_msrp is not None:
-        filtered = [car for car in filtered if car["msrp"] and float(car["msrp"]) <= float(max_msrp)]
+        filtered = [car for car in filtered if parsePrice(car["msrp"]) is not None and parsePrice(car["msrp"]) <= float(max_msrp)]
     # mpg range
     if min_mpg is not None:
-        filtered = [car for car in filtered if car["mpg"] and float(car["mpg"]) >= float(min_mpg)]
+        filtered = [car for car in filtered if parseMpg(car["mpg"]) is not None and parseMpg(car["mpg"]) >= float(min_mpg)]
     if max_mpg is not None:
-        filtered = [car for car in filtered if car["mpg"] and float(car["mpg"]) <= float(max_mpg)]
+        filtered = [car for car in filtered if parseMpg(car["mpg"]) is not None and parseMpg(car["mpg"]) <= float(max_mpg)]
 
     return jsonify(filtered), 200
     
@@ -152,7 +153,7 @@ def filter_cars():
 def get_car(car_id):
     cars = load_cars_from_csv()
     for car in cars:
-        if car["id"] == car_id:
+        if str(car["id"]) == str(car_id):
             return jsonify(car), 200
     return jsonify({"error": "Car not found"}), 404
 
@@ -160,8 +161,8 @@ def get_car(car_id):
 def compare_cars():
     cars = load_cars_from_csv()
     data = request.get_json() or {}
-    ids = data.get("ids", [])
-    selected_cars = [car for car in cars if car["id"] in ids]
+    ids = [str(i) for i in data.get("ids", [])]
+    selected_cars = [car for car in cars if str(car["id"]) in ids]
     return jsonify(selected_cars), 200
 
 
