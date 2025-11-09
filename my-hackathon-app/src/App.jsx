@@ -11,12 +11,14 @@ function App() {
         <Navbar />
         {/* Main content area*/}
         <main className = "home-main">
-          {/* Placeholder for main content */}
           <section className = "content-section">
-            <h1> Find Your Perfect Toyota</h1>
-            <p>Discover and compare Toyota vehicles that fits your lifestyle</p>
-            {/* CTA Button, let users explore */}
-            <button className = "cta-button">Explore Vehicles</button>
+            {/* overlay on top of image */}
+            <div className = "content-overlay">
+              <h1> Find Your Perfect Toyota</h1>
+              <p>Discover and compare Toyota vehicles that fits your lifestyle</p>
+              {/* CTA Button, let users explore */}
+              <button className = "cta-button">Explore Vehicles</button>
+            </div>
           </section>
 
           {/* Info Section */}

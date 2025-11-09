@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Inter:wght@400;600&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text&display=swap');
 
 .app-container {
   display: flex;
@@ -6,8 +6,8 @@
   min-height: 100vh;
   background: #f9fafb;
   color: #0f172a;
-  font-family: "Inter", system-ui, -apple-system, sans-serif; /* professional body font */
-  overflow-x: hidden; /* ✅ fix right-side white space */
+  font-family: "Inter", system-ui, -apple-system, sans-serif; 
+  overflow-x: hidden; 
 }
 
 /* navbar styles */
@@ -15,15 +15,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px clamp(8px, 4vw, 24px); /* responsive horizontal padding */
-  background: linear-gradient(90deg, #3b0a91, #6d28d9); /* richer purple tone */
+  padding: 12px clamp(8px, 4vw, 24px);
+  background: linear-gradient(90deg, #350929, #4a0c34);
   border-bottom: 1px solid rgba(15, 23, 42, 0.1);
   position: sticky;
   top: 0;
   z-index: 1000;
   color: #f9fafb;
-  width: 100%; /* ✅ ensure full width */
-  box-sizing: border-box; /* prevent overflow from padding */
+  width: 100%; 
+  box-sizing: border-box;
 }
 
 /* hamburger */
@@ -46,7 +46,7 @@
   position: absolute;
   top: 36px;
   left: 0;
-  background-color: #1e1b4b; /* darker purple base */
+  background-color: #1e1b4b; 
   border-radius: 10px;
   padding: 10px 14px;
   display: flex;
@@ -77,7 +77,7 @@
   align-items: center;
   gap: 8px;
   padding: 0 8px;
-  min-width: 0; /* ✅ prevents flex overflow */
+  min-width: 0;
 }
 
 .search-input {
@@ -146,8 +146,8 @@
 }
 
 .signup-button {
-  background: linear-gradient(90deg, #7c3aed, #5b21b6);
-  color: #fefce8;
+  background: linear-gradient(90deg, #facc15, #fde047);
+  color: #3b0764;
 }
 
 .login-button:hover,
@@ -159,29 +159,59 @@
 
 /* Home Page Main Content */
 .content-section {
-  max-width: 960px;
-  margin: 0 auto 40px auto;
-  padding: 48px 24px;
+  position: relative;
+  width: 100%;
+  height: 420px;
+  margin: 0 0 40px 0;
+  border-radius: 0;
+  overflow: hidden;
+
+  /* background image */
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.7)),
+    url("/home-background.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.content-section::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  background: linear-gradient(
+    to bottom,
+    rgba(249, 250, 251, 0),
+    rgba(249, 250, 251, 0.85)
+  );
+  pointer-events: none;
+}
+
+.content-overlay {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
   text-align: center;
-  border-radius: 20px;
-  background: radial-gradient(circle at top left, #ede9fe, #fff9db);
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
-  overflow-x: hidden;
+  color: #f9fafb;
+  padding: 0 20px;
 }
 
-.content-section h1 {
-  font-size: clamp(1.8rem, 4vw, 2.5rem);
-  margin-bottom: 12px;
-  color: #1f2937;
-  font-family: "Luckiest Guy", cursive; /* keep the playful title font */
+.content-overlay h1 {
+  font-family: "DM Serif Text", serif;
+  font-size: 2.4rem;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 
-.content-section p {
-  font-size: 1.05rem;
-  color: #374151;
-  margin-bottom: 22px;
-  font-family: "Inter", sans-serif;
+.content-overlay p {
+  font-size: 1rem;
+  margin-bottom: 20px;
+  color: #e5e7eb
 }
+
 
 /* vehicle cta button */
 .cta-button {
@@ -212,13 +242,13 @@
   border-radius: 16px;
   padding: 24px 24px 26px;
   box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08);
-  border-top: 4px solid #6d28d9;
+  border-top: 4px solid #350929;
 }
 
 .info-section h2 {
   margin-bottom: 10px;
-  color: #3b0a91;
-  font-family: "Luckiest Guy", cursive;
+  color: #3b0764;
+  font-family: "DM Serif Text", cursive;
 }
 
 .info-section ol {
@@ -235,13 +265,13 @@
 .footer {
   text-align: center;
   padding: 16px 10px;
-  background: linear-gradient(90deg, #3b0a91, #6d28d9);
+  background: linear-gradient(90deg, #350929, #4a0c34);
   border-top: 1px solid rgba(15, 23, 42, 0.2);
   font-size: 0.9rem;
   color: #e5e7eb;
   margin-top: auto;
   width: 100%;
-  box-sizing: border-box; /* ✅ stops footer overflow */
+  box-sizing: border-box;
   font-family: "Inter", sans-serif;
 }
 
