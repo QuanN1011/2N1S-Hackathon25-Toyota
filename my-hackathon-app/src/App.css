@@ -248,3 +248,21 @@
 .footer p {
   margin: 3px 0;
 }
+
+/* hamburger menu line */
+.menu-line {
+  width: 22px;
+  height: 3px;
+  background-color: #facc15;
+  border-radius: 2px;
+  transition: background-color 0.2s ease;
+}
+
+/* hover effect */
+.menu-button:hover .menu-line {
+  background-color: #fd3047;
+}
+
+.menu-line {
+  box-shadow: 0 0 4px rgba(250, 204, 21, 0.7);
+}
