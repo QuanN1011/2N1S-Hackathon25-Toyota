@@ -1,13 +1,30 @@
 // Display navigation bar with hamburger menu, search bar, and user login
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../supabaseClient";
+import LogoutButton from "./LogoutButton.jsx";
 
 export default function Navbar() {
   //const [isMenuOpen, setIsMenuOpen] = useState(false); // never used
   // menu closed
+  const [session, setSession] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   function handleClickLogin() {
     navigate("/login"); // this changes to the login page
@@ -70,12 +87,21 @@ export default function Navbar() {
 
       {/* User Login */}
       <div className="navbar-login">
-        <button className="login-button" onClick={handleClickLogin}>
-          Login
-        </button>
-        <button className="signup-button" onClick={handleClickSignUp}>
-          Sign Up
-        </button>
+        {!session && (
+          <button className="login-button" onClick={handleClickLogin}>
+            Log In
+          </button>
+        )}
+        {!session && (
+          <button className="signup-button" onClick={handleClickSignUp}>
+            Sign Up
+          </button>
+        )}
+        {session && (
+          <button className="logout-button">
+            <LogoutButton />
+          </button>
+        )}
       </div>
     </nav>
   );

@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import Navbar from "../components/NavBar";
+import Footer from "../components/Footer";
 
 const VEHICLES = [
   {
@@ -68,92 +70,101 @@ function AllVehicles() {
   });
 
   return (
-    <main className="page-main">
-      <h1 className="page-heading">Browse All Toyota Vehicles</h1>
-      <p className="page-subtitle">
-        Use the filters below to quickly find Toyotas that fit your lifestyle,
-        space needs, and budget.
-      </p>
+    <div className="app-container">
+      <Navbar />
 
-      <section className="page-card">
-        <h2 className="page-section-title">Filters</h2>
-        <div className="filters-grid">
-          <div>
-            <label className="field-label">Search by name</label>
-            <input
-              type="text"
-              className="input-pill"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="e.g. Camry, RAV4"
-            />
-          </div>
+      {/* main content area, styled like inner pages */}
+      <main className="home-main">
+        <div className="page-main">
+          <h1 className="page-heading">Browse All Toyota Vehicles</h1>
+          <p className="page-subtitle">
+            Use the filters below to quickly find Toyotas that fit your
+            lifestyle, space needs, and budget.
+          </p>
 
-          <div>
-            <label className="field-label">Vehicle type</label>
-            <select
-              className="select-pill"
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-            >
-              <option value="All">All</option>
-              <option value="Sedan">Sedan</option>
-              <option value="SUV">SUV</option>
-              <option value="Truck">Truck</option>
-              <option value="Hybrid">Hybrid</option>
-            </select>
-          </div>
+          <section className="page-card">
+            <h2 className="page-section-title">Filters</h2>
+            <div className="filters-grid">
+              <div>
+                <label className="field-label">Search by name</label>
+                <input
+                  type="text"
+                  className="input-pill"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="e.g. Camry, RAV4"
+                />
+              </div>
 
-          <div>
-            <label className="field-label">Max price ($)</label>
-            <input
-              type="number"
-              className="input-pill"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
-              placeholder="e.g. 35000"
-            />
-          </div>
+              <div>
+                <label className="field-label">Vehicle type</label>
+                <select
+                  className="select-pill"
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
+                >
+                  <option value="All">All</option>
+                  <option value="Sedan">Sedan</option>
+                  <option value="SUV">SUV</option>
+                  <option value="Truck">Truck</option>
+                  <option value="Hybrid">Hybrid</option>
+                </select>
+              </div>
 
-          <div>
-            <label className="field-label">Minimum seats</label>
-            <input
-              type="number"
-              className="input-pill"
-              value={minSeats}
-              onChange={(e) => setMinSeats(e.target.value)}
-              placeholder="e.g. 5"
-            />
-          </div>
+              <div>
+                <label className="field-label">Max price ($)</label>
+                <input
+                  type="number"
+                  className="input-pill"
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(e.target.value)}
+                  placeholder="e.g. 35000"
+                />
+              </div>
+
+              <div>
+                <label className="field-label">Minimum seats</label>
+                <input
+                  type="number"
+                  className="input-pill"
+                  value={minSeats}
+                  onChange={(e) => setMinSeats(e.target.value)}
+                  placeholder="e.g. 5"
+                />
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div className="vehicles-grid">
+              {filtered.map((v) => (
+                <article key={v.id} className="vehicle-card">
+                  <h2 className="vehicle-name">{v.name}</h2>
+                  <p className="vehicle-meta">
+                    {v.type} • {v.seats} seats • {v.drivetrain}
+                  </p>
+                  <p className="vehicle-text">
+                    <strong>${v.price.toLocaleString()}</strong> (MSRP estimate)
+                  </p>
+                  <p className="vehicle-text">
+                    {v.mpgCity} / {v.mpgHwy} mpg (city / highway)
+                  </p>
+                </article>
+              ))}
+
+              {filtered.length === 0 && (
+                <p className="page-text">
+                  No vehicles match those filters yet. Try widening your price
+                  or type options.
+                </p>
+              )}
+            </div>
+          </section>
+
+          <Footer />
         </div>
-      </section>
-
-      <section>
-        <div className="vehicles-grid">
-          {filtered.map((v) => (
-            <article key={v.id} className="vehicle-card">
-              <h2 className="vehicle-name">{v.name}</h2>
-              <p className="vehicle-meta">
-                {v.type} • {v.seats} seats • {v.drivetrain}
-              </p>
-              <p className="vehicle-text">
-                <strong>${v.price.toLocaleString()}</strong> (MSRP estimate)
-              </p>
-              <p className="vehicle-text">
-                {v.mpgCity} / {v.mpgHwy} mpg (city / highway)
-              </p>
-            </article>
-          ))}
-
-          {filtered.length === 0 && (
-            <p className="page-text">
-              No vehicles match those filters yet. Try widening your price or
-              type options.
-            </p>
-          )}
-        </div>
-      </section>
-    </main>
+      </main>
+    </div>
   );
 }
 
