@@ -98,7 +98,7 @@ export default function Navbar() {
 
       {/* 🔍 Search Bar */}
       <div className="navbar-search" style={{ position: "relative" }}>
-        <form onSubmit={handleSearchSubmit}>
+        <form onSubmit={handleSearchSubmit} className="navbar-search-form">
           <input
             type="text"
             className="search-input"

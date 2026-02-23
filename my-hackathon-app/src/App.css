@@ -99,6 +99,25 @@
   min-width: 0;
 }
 
+.navbar-search-form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 420px;
+}
+
+.navbar-search-form .search-input {
+  flex: 1;
+  min-width: 0;
+  max-width: none;
+}
+
+.navbar-search-form .search-button {
+  flex-shrink: 0;
+}
+
 .search-input {
   width: 100%;
   max-width: 360px;
@@ -229,6 +248,14 @@
   font-size: 1rem;
   margin-bottom: 20px;
   color: #e5e7eb
+}
+
+.hero-tagline {
+  font-size: 1.1rem;
+  font-style: italic;
+  color: #facc15 !important;
+  margin-bottom: 24px !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 }
 
 

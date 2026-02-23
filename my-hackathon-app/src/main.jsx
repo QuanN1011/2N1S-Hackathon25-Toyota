@@ -21,7 +21,13 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/allvehicles" element={<AllVehicles />} />
         <Route path="/comparecar" element={<CompareCar />} />
         <Route path="/help" element={<Help />} />
-        {/* 👇 NO :id here anymore */}
+        {/* 
+           Two routes for ShowCar - order matters
+          - /showcar/:id matches first when URL has an ID (e.g. /showcar/abc-123)
+          - /showcar matches when user navigates to search page directly
+          Both render the same ShowCar component; it uses useParams() to detect which mode
+        */}
+        <Route path="/showcar/:id" element={<ShowCar />} />
         <Route path="/showcar" element={<ShowCar />} />
       </Routes>
     </BrowserRouter>

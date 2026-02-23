@@ -88,6 +88,7 @@ function App() {
           <div className="content-overlay">
             <h1>Find Your Perfect Toyota</h1>
             <p>Discover and compare Toyota vehicles that fit your lifestyle.</p>
+            <p className="hero-tagline">Your next adventure starts here.</p>
 
             {/* Explore all vehicles (optional) */}
             <button className="cta-button" onClick={handleClickExploreAll}>

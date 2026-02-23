@@ -1,10 +1,12 @@
 // src/pages/ShowCar.jsx
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import Navbar from "../components/NavBar";
 import Footer from "../components/Footer";
-import { fetchCars } from "../api/cars";
+import { fetchCars, fetchCarById } from "../api/cars";
 
 export default function ShowCar() {
+  const { id } = useParams(); // LEARN: Gets URL params - e.g. /showcar/abc-123 → id = "abc-123"
   const [query, setQuery] = useState("");
   const [car, setCar] = useState(null);
   const [suggestions, setSuggestions] = useState([]); // live suggestion list
@@ -12,8 +14,35 @@ export default function ShowCar() {
   const [error, setError] = useState(null);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
-  // 🔹 Fetch matching cars dynamically while typing
+  /*
+   * : API connection - when user lands with an ID in URL (e.g. from "View details" on AllVehicles),
+   * we call fetchCarById(id) → GET http://localhost:8000/api/cars/{id}
+   * The backend returns a single car; we display it directly.
+   */
   useEffect(() => {
+    if (!id) {
+      setCar(null); // : Clear car when navigating back to search-only mode (/showcar)
+      return;
+    }
+    async function loadCarById() {
+      try {
+        setLoading(true);
+        setError(null);
+        const carData = await fetchCarById(id);
+        setCar(carData);
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load car details.");
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadCarById();
+  }, [id]);
+
+  // 🔹 Fetch matching cars dynamically while typing (only when no ID in URL - i.e. search mode)
+  useEffect(() => {
+    if (id) return; // LEARN: Skip search suggestions when viewing a specific car by ID
     const trimmed = query.trim();
     if (!trimmed) {
       setSuggestions([]);
@@ -31,7 +60,7 @@ export default function ShowCar() {
     }, 250); // debounce to avoid spam requests
 
     return () => clearTimeout(delayDebounce);
-  }, [query]);
+  }, [query, id]);
 
   // 🔹 Handle full search or selection
   async function handleSearch(e) {
